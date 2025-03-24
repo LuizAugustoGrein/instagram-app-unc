@@ -1,27 +1,79 @@
 import { useState, useEffect } from 'react';
-import { Text, TextInput } from 'react-native';
+import { Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 
 export default function SearchScreen () {
 
-    const [searchText, setSearchText] = useState('');
+    const [fieldText, setFieldText] = useState('');
+    const [list, setList] = useState([]);
 
     useEffect(() => {
-        console.log(searchText);
-    }, [searchText])
+        console.log(list);
+    }, [list]);
 
     return (
         <>
-            <Text>Tela de Pesquisa</Text>
+            <Text style={{
+                fontSize: 30,
+                fontWeight: 'bold',
+                textAlign: 'center',
+                marginVertical: 20
+            }}>TO DO LIST</Text>
             <TextInput style={{
-                    height: 40,
-                    margin: 12,
+                    height: 50,
+                    margin: 15,
                     borderWidth: 1,
-                    padding: 10
+                    padding: 10,
+                    borderRadius: 10
                 }}
-                value={searchText}
-                onChangeText={setSearchText}
+                value={fieldText}
+                onChangeText={setFieldText}
             />
-            <Text style={{fontSize: 50}}>{searchText}</Text>
+            <TouchableOpacity
+                style={{
+                    margin: 15,
+                    backgroundColor: '#2b478a',
+                    padding: 15,
+                    borderRadius: 10
+                }}
+                onPress={() => {
+                    if (fieldText.trim()) {
+                        setList([...list, fieldText]);
+                        setFieldText('');
+                    }
+                }}
+            >
+                <Text style={{
+                    color: 'white',
+                    textAlign: 'center',
+                    fontSize: 18,
+                    fontWeight: 'bold'
+                }}>ADICIONAR</Text>
+            </TouchableOpacity>
+
+            <FlatList
+                data={list}
+                renderItem={({item, index}) => (
+                    <TouchableOpacity
+                        onPress={() => {
+                            setList(list.filter((_, i) => {
+                                return i != index;
+                            }));
+                        }}
+                        style={{
+                            backgroundColor: '#ccc',
+                            marginHorizontal: 15,
+                            marginVertical: 10,
+                            padding: 15,
+                            borderRadius: 10
+                        }}
+                    >
+                        <Text style={{
+                            fontSize: 20,
+                            fontWeight: 600
+                        }}>{item}</Text>
+                    </TouchableOpacity>
+                )}
+            />
         </>
     )
 }
